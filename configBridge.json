@@ -21,6 +21,9 @@
             "iOS >= 6",
             "Opera >= 12",
             "Safari >= 6"
-        ]
+        ],
+        "jslocation": ["js"],
+        "lesslocation": ["less"],
+        "csslocation": ["css"]
     }
 }

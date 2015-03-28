@@ -6,22 +6,25 @@ module.exports = function(grunt) {
     grunt.initConfig({
 
         topBanner: configBridge.config.topBanner.join('\n'),
+        yourjsfiles: configBridge.config.jslocation.join('\n'),
+        yourless: configBridge.config.lesslocation.join('\n'),
+        yourcss: configBridge.config.csslocation.join('\n'),
 
         jshint: {
             options: {
-                jshintrc: 'js/.jshintrc'
+                jshintrc: '.jshintrc'
             },
-            debugbar: ['**/*.js']
+            alljs: ['<%= yourjsfiles %>/*.js']
         },
 
         uglify: {
             bootstrap: {
                 options: {
                     sourceMap: true,
-                    sourceMapName: 'dist/js/script.map'
+                    sourceMapName: '<%= yourjsfiles %>/script.js.map'
                 },
                 files: {
-                    'dist/js/script.min.js': ['js/alert.js','js/button.js']
+                    '<%= yourjsfiles %>/script.min.js': ['<%= yourjsfiles %>/alert.js','<%= yourjsfiles %>/button.js']
                 }
             }
         },
@@ -29,16 +32,16 @@ module.exports = function(grunt) {
         concat: {
             catscript: {
                 src: [
-                    'js/*.js'
+                    '<%= yourjsfiles %>/*.js'
                 ],
-                dest: 'dist/js/newscript.js'
+                dest: '<%= yourjsfiles %>/allscript.js'
             }
         },
 
         watch: {
-            bootstrap: {
-                files: ['js/*.js'],
-                tasks: ['jshint:bootstrap']
+            jsfiles: {
+                files: ['<%= yourjsfiles %>/*.js'],
+                tasks: ['jshint:alljs']
             }
         },
 
@@ -49,10 +52,10 @@ module.exports = function(grunt) {
                     sourceMap: true,
                     outputSourceFiles: true,
                     sourceMapURL: 'bootstrap.css.map',
-                    sourceMapFilename: 'dist/css/bootstrap.css.map'
+                    sourceMapFilename: '<%= yourcss %>/bootstrap.css.map'
                 },
-                src: 'less/bootstrap.less',
-                dest: 'dist/css/bootstrap.css'
+                src: '<%= yourless %>/bootstrap.less',
+                dest: '<%= yourcss %>/bootstrap.css'
             },
             compileTheme: {
                 options: {
@@ -60,10 +63,10 @@ module.exports = function(grunt) {
                     sourceMap: true,
                     outputSourceFiles: true,
                     sourceMapURL: 'bootstrap-theme.css.map',
-                    sourceMapFilename: 'dist/css/bootstrap-theme.css.map'
+                    sourceMapFilename: '<%= yourcss %>/bootstrap-theme.css.map'
                 },
-                src: 'less/theme.less',
-                dest: 'dist/css/bootstrap-theme.css'
+                src: '<%= yourless %>',
+                dest: '<%= yourcss %>/bootstrap-theme.css'
             }
         },
 
@@ -75,13 +78,13 @@ module.exports = function(grunt) {
                 options: {
                     map: true
                 },
-                src: 'dist/css/bootstrap.css'
+                src: '<%= yourcss %>/bootstrap.css'
             },
             theme: {
                 options: {
                     map: true
                 },
-                src: 'dist/css/bootstrap-theme.css'
+                src: '<%= yourcss %>/bootstrap-theme.css'
             }
         },
 
@@ -92,19 +95,19 @@ module.exports = function(grunt) {
                 advanced: false
             },
             minifyCore: {
-                src: 'dist/css/bootstrap.css',
-                dest: 'dist/css/bootstrap.min.css'
+                src: '<%= yourcss %>/bootstrap.css',
+                dest: '<%= yourcss %>/bootstrap.min.css'
             },
             minifyTheme: {
-                src: 'dist/css/bootstrap-theme.css',
-                dest: 'dist/css/bootstrap-theme.min.css'
+                src: '<%= yourcss %>/bootstrap-theme.css',
+                dest: '<%= yourcss %>/bootstrap-theme.min.css'
             },
             all: {
                 files: [{
                     expand: true,
-                    cwd: 'dist/css',
+                    cwd: '<%= yourcss %>',
                     src: ['*.css', '!*.min.css', '!*.css.map'],
-                    dest: 'dist/css',
+                    dest: '<%= yourcss %>',
                     ext: '.min.css'
                 }]
             }
@@ -116,17 +119,17 @@ module.exports = function(grunt) {
                 banner: '<%= topBanner %>'
             },
             files: {
-                src: 'dist/css/*.css'
+                src: '<%= yourcss %>/*.css'
             }
         },
 
         csslint: {
             options: {
-                csslintrc: 'less/.csslintrc'
+                csslintrc: '.csslintrc'
             },
             dist: [
-                'dist/css/bootstrap.css',
-                'dist/css/bootstrap-theme.css'
+                '<%= yourcss %>/bootstrap.css',
+                '<%= yourcss %>/bootstrap-theme.css'
             ]
         }
     });
@@ -144,11 +147,11 @@ module.exports = function(grunt) {
     // Load tasks.
     require('matchdep').filterDev(['grunt-*', '!grunt-legacy-util']).forEach( grunt.loadNpmTasks );
 
-    grunt.registerTask('watch-bootstrap', ['watch:bootstrap']);
+    grunt.registerTask('watch-js', ['watch:jsfiles']);
     grunt.registerTask('less-bootstrap', ['less:compileCore', 'less:compileTheme', 'usebanner:files']);
     grunt.registerTask('minify-bootstrap', ['cssmin:minifyCore', 'cssmin:minifyTheme']);
     grunt.registerTask('minify-all', ['cssmin:all']);
-    grunt.registerTask('js-bootstrap', ['uglify:bootstrap']);
+    grunt.registerTask('minifyjs-bootstrap', ['uglify:bootstrap']);
     grunt.registerTask('concat-js-bootstrap', ['concat:catscript']);
 
 };

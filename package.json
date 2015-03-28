@@ -1,8 +1,8 @@
 {
-  "name": "tz-guard",
+  "name": "project-name",
   "version": "0.1.0",
-  "description": "TZ Guard is a simple security WordPress Plugin.",
-  "author": "Sonlv",
+  "description": "This is description for your project",
+  "author": "TemPlaza",
   "license": "GPLv2 or later",
   "devDependencies": {
     "grunt": "^0.4.5",
